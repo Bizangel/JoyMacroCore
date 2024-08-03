@@ -6,8 +6,7 @@
 
 int main()
 {
-    fnJoyMacroCore();
-    fnJoyMacroCoreWithDep();
+    SampleExporterJoyMacroFunction();
     std::cout << "Hello World!\n";
     system("pause");
 }
