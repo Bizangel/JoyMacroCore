@@ -1,7 +1,7 @@
 // JoyMacroCore.cpp : Defines the functions for the static library.
 //
 
-#include "JoyMacroCore.h"
+#include "Include/JoyMacroCore.h"
 #include <iostream>
 
 // TODO: This is an example of a library function
