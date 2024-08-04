@@ -49,4 +49,20 @@ JoyMacroExitCode JoyMacroOverrideClient::StopOverride()
     return JoyMacroExitCode::SUCCESS;
 }
 
+int JoyMacroOverrideClient::getFirstActiveControllerIndex()
+{
+    DWORD stateResult;
+    for (int i = 0; i < 4; i++) {
+        XINPUT_STATE controllerState;
+        ZeroMemory(&controllerState, sizeof(XINPUT_STATE));
+        stateResult = XInputGetState(i, &controllerState);
+
+        if (stateResult == ERROR_SUCCESS)
+            return i;
+    }
+
+    return -1;
+}
+
+
 JoyMacroOverrideClient::~JoyMacroOverrideClient() = default;

@@ -44,5 +44,7 @@ public:
 	JoyMacroExitCode StartOverride(int overrideIndex, IGamepadOverrider* overrider);
 	JoyMacroExitCode StopOverride();
 
+	int getFirstActiveControllerIndex();
+
 	~JoyMacroOverrideClient();
 };
