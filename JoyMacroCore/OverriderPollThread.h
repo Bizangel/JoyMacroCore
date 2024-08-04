@@ -13,14 +13,17 @@ private:
     std::unique_ptr<bool> stopNotifier;
     VigemController* _outputController;
     IGamepadOverrider* _overriderController;
+    std::vector<bool>* _paddleStateRef;
 
     int pollDelay;
     int indexToPoll = -1;
 
+    PaddleState getCurrentPaddleState();
+
     void Poll();
     void PollLoop();
 public:
-    OverriderPollThread(int polld, IGamepadOverrider* overrider, VigemController* outputCont);
+    OverriderPollThread(int polld, IGamepadOverrider* overrider, VigemController* outputCont, std::vector<bool>* paddleStateRef);
     ~OverriderPollThread();
 
     void Initialize();

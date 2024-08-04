@@ -1,7 +1,7 @@
 #include "ExampleOverrider.h"
 
 
-void ExampleOverrider::OverrideInput(XINPUT_GAMEPAD& gamepadRef)
+void ExampleOverrider::OverrideInput(XINPUT_GAMEPAD& gamepadRef, const PaddleState& pState)
 {
 	// This example overrides swaps A inputs with B inputs
 	// 
@@ -16,4 +16,8 @@ void ExampleOverrider::OverrideInput(XINPUT_GAMEPAD& gamepadRef)
 
 	if ((input.wButtons & XINPUT_GAMEPAD_B) != 0) // if B set
 		gamepadRef.wButtons |= XINPUT_GAMEPAD_A; // set A
+
+	// Do some paddle to button mapping
+	if (pState.P1)
+		gamepadRef.wButtons |= XINPUT_GAMEPAD_Y; // set Y
 }

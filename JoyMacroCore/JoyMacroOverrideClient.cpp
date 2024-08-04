@@ -15,6 +15,11 @@ int JoyMacroOverrideClient::EnsureVigemInitialized()
 
 JoyMacroExitCode JoyMacroOverrideClient::StartOverride(int overrideIndex, IGamepadOverrider* overrider)
 {
+    return StartOverride(overrideIndex, overrider, {});
+}
+
+JoyMacroExitCode JoyMacroOverrideClient::StartOverride(int overrideIndex, IGamepadOverrider* overrider, const std::vector<int>& paddleKeymapping)
+{
     LOG_DEBUG("Start Override Called!");
     if (_poller != nullptr)
         return JoyMacroExitCode::ALREADY_INITIALIZED;
@@ -26,12 +31,16 @@ JoyMacroExitCode JoyMacroOverrideClient::StartOverride(int overrideIndex, IGamep
     if (!_vigemClient->CreateAndPlugController(overrideIndex))
         return JoyMacroExitCode::VIGEM_UNABLE_PLUG_CONTROLLER;
     
+    _keyhookThread = std::make_shared<KeyboardHookThread>(paddleKeymapping);
+    _keyhookThread->InitHooking();
+
     // TODO: start HID-HIDE
-    _poller = std::make_shared<OverriderPollThread>(POLLING_DELAY_MS, overrider, _vigemClient->getControllerRef());
+    _poller = std::make_shared<OverriderPollThread>(
+        POLLING_DELAY_MS, overrider, _vigemClient->getControllerRef(), _keyhookThread->getPaddleStateRef()
+    );
     _poller->Initialize(); 
 
-    _keyhookThread = std::make_shared<KeyboardHookThread>();
-    _keyhookThread->InitHooking();
+
 
     return JoyMacroExitCode::SUCCESS;
 }

@@ -1,9 +1,10 @@
 #include "KeyboardHookThread.h"
 
-KeyboardHookThread::KeyboardHookThread()
+KeyboardHookThread::KeyboardHookThread(const std::vector<int>& paddleKeycodes)
 {
+    paddleKeymapping = paddleKeycodes; // make a copy
+    paddlePressState = std::vector<bool>(PADDLE_COUNT, false);
     _winHookInstalled = false;
-    //running = std::make_unique<bool>(false);
 }
 
 KeyboardHookThread::~KeyboardHookThread()
@@ -13,24 +14,31 @@ KeyboardHookThread::~KeyboardHookThread()
 
 HHOOK KeyboardHookThread::keyboardHook;
 DWORD KeyboardHookThread::childThreadId;
+std::vector<int> KeyboardHookThread::paddleKeymapping;
+std::vector<bool> KeyboardHookThread::paddlePressState;
 
 LRESULT __stdcall KEYHookCallback(int nCode, WPARAM wParam, LPARAM lParam)
 {
     if (nCode >= 0 && (wParam == WM_KEYDOWN || wParam == WM_KEYUP))
     {
         KBDLLHOOKSTRUCT* kbdStruct = (KBDLLHOOKSTRUCT*)lParam;
-        if (kbdStruct->vkCode == 0x4C) // Virtual-Key code for 'L'
-        {
-            if (wParam == WM_KEYDOWN)
+        for (int i = 0; i < KeyboardHookThread::paddleKeymapping.size(); i++) {
+            DWORD keyCode = KeyboardHookThread::paddleKeymapping[i];
+
+            if (kbdStruct->vkCode == keyCode) // Virtual-Key code for 'L'
             {
-                std::cout << "L key down!" << std::endl;
+                if (wParam == WM_KEYDOWN)
+                {
+                    KeyboardHookThread::paddlePressState[i] = true;
+                }
+                else if (wParam == WM_KEYUP)
+                {
+                    KeyboardHookThread::paddlePressState[i] = false;
+                }
+                return 1; // Block the key
             }
-            else if (wParam == WM_KEYUP)
-            {
-                std::cout << "L key up!" << std::endl;
-            }
-            return 1; // Block the key
         }
+
     }
 
     return CallNextHookEx(KeyboardHookThread::keyboardHook, nCode, wParam, lParam);
@@ -51,9 +59,9 @@ void KeyboardHookThread::StopHooking()
     _runningThread.join();
 }
 
-bool KeyboardHookThread::isPressed(int keyCode)
+std::vector<bool>* KeyboardHookThread::getPaddleStateRef()
 {
-    return false;
+    return &KeyboardHookThread::paddlePressState;
 }
 
 void KeyboardHookThread::ThreadLoop()

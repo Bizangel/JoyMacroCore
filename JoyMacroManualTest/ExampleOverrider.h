@@ -6,6 +6,6 @@
 class ExampleOverrider :
     public IGamepadOverrider
 {
-    void OverrideInput(XINPUT_GAMEPAD& gamepadRef) override;
+    void OverrideInput(XINPUT_GAMEPAD& gamepadRef, const PaddleState& state) override;
 };
 

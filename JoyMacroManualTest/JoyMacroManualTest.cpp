@@ -4,7 +4,7 @@
 #include <iostream>
 #include "JoyMacroCore.h"
 #include "ExampleOverrider.h"
-
+#include <vector>
 #include <Windows.h>
 
 int main()
@@ -18,7 +18,10 @@ int main()
         return 0;
     }
 
-    overrideClient->StartOverride(activeControllerIndex, overrider.get());
+    // basic paddle keymapping
+    std::vector<int> keymapping{ 'Q','W','E','R' };
+
+    overrideClient->StartOverride(activeControllerIndex, overrider.get(), keymapping);
     std::cout << "Press To Stop" << std::endl;
     system("pause");
 

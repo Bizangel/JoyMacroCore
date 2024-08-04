@@ -2,7 +2,10 @@
 
 #include <Windows.h>
 #include <thread>
+#include <vector>
 #include "JoyMacroLogging.h"
+
+#define PADDLE_COUNT 4
 
 class KeyboardHookThread
 {
@@ -18,14 +21,16 @@ private:
 public:
     static HHOOK keyboardHook;
     static DWORD childThreadId;
+    static std::vector<int> paddleKeymapping;
+    static std::vector<bool> paddlePressState;
 
-    KeyboardHookThread();
+    KeyboardHookThread(const std::vector<int>& paddleKeycodes);
     ~KeyboardHookThread();
 
     void InitHooking();
     void StopHooking();
 
-    bool isPressed(int keyCode);
+    std::vector<bool>* getPaddleStateRef();
 };
 
 

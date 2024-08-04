@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <Xinput.h>
+#include <vector>
 
 // ===== Exit Codes =======
 
@@ -19,13 +20,20 @@ enum JoyMacroExitCode {
 	ALREADY_INITIALIZED = 3,
 };
 
+struct PaddleState {
+	bool P1;
+	bool P2;
+	bool P3;
+	bool P4;
+};
+
 // =============
 // Publicly exposable interface to implement Gamepad Input Overriding
 // =============
 class IGamepadOverrider
 {
 public:
-	virtual void OverrideInput(XINPUT_GAMEPAD& gamepadRef) = 0;
+	virtual void OverrideInput(XINPUT_GAMEPAD& gamepadRef, const PaddleState& pState) = 0;
 };
 
 class VigemClient;
@@ -44,6 +52,7 @@ private:
 	int EnsureVigemInitialized();
 public:
 	JoyMacroExitCode StartOverride(int overrideIndex, IGamepadOverrider* overrider);
+	JoyMacroExitCode StartOverride(int overrideIndex, IGamepadOverrider* overrider, const std::vector<int>& paddleKeymapping);
 	JoyMacroExitCode StopOverride();
 
 	int getFirstActiveControllerIndex();
