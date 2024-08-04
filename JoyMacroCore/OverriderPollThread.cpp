@@ -35,11 +35,8 @@ void OverriderPollThread::Poll() {
     ZeroMemory(&controllerState, sizeof(XINPUT_STATE)); // think this only needs to be done once
     stateResult = XInputGetState(indexToPoll, &controllerState);
     if (stateResult == ERROR_SUCCESS) {
-        /*std::cout << "Controller connected!" << std::endl;*/
+        //std::cout << "Controller connected!" << std::endl;
         _overriderController->OverrideInput(controllerState.Gamepad);
         _outputController->UpdateState(controllerState.Gamepad);
-    }
-    else {
-        std::cout << "Controller disconnected!" << std::endl;
     }
 }

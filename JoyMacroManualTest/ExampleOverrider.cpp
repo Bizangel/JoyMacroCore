@@ -11,9 +11,9 @@ void ExampleOverrider::OverrideInput(XINPUT_GAMEPAD& gamepadRef)
 	gamepadRef.wButtons &= ~XINPUT_GAMEPAD_A; // unset A
 	gamepadRef.wButtons &= ~XINPUT_GAMEPAD_B; // unset B
 
-	if (gamepadRef.wButtons & XINPUT_GAMEPAD_A) // if A set
+	if ((input.wButtons & XINPUT_GAMEPAD_A) != 0) // if A set
 		gamepadRef.wButtons |= XINPUT_GAMEPAD_B; // set B
 
-	if (gamepadRef.wButtons & XINPUT_GAMEPAD_B) // if B set
+	if ((input.wButtons & XINPUT_GAMEPAD_B) != 0) // if B set
 		gamepadRef.wButtons |= XINPUT_GAMEPAD_A; // set A
 }
