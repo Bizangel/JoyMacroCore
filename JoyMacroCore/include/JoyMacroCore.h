@@ -36,10 +36,8 @@ class OverriderPollThread;
 class JoyMacroOverrideClient
 {
 private:
-
-
-	std::unique_ptr<VigemClient> _vigemClient = nullptr;
-	std::unique_ptr<OverriderPollThread> _poller = nullptr;
+	std::shared_ptr<VigemClient> _vigemClient;
+	std::shared_ptr<OverriderPollThread> _poller;
 
 	int EnsureVigemInitialized();
 public:

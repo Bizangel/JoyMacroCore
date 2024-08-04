@@ -55,7 +55,6 @@ bool VigemClient::CreateAndPlugController(int physicalControllerIndex)
 
 bool VigemClient::DeleteAndUnplugController()
 {
-    LOG_DEBUG("DeleteAndUnplugController called!");
     if (_controller == nullptr) // cannot delete non-existant controller
         return false;
 

@@ -1,5 +1,4 @@
 #include "OverriderPollThread.h"
-#include "include/JoyMacroCore.h"
 
 OverriderPollThread::OverriderPollThread(int polld, IGamepadOverrider* overrider, VigemController* outputCont)
 {

@@ -4,7 +4,7 @@
 #include <Xinput.h>
 #include <thread>
 #include "VigemController.h"
-class IGamepadOverrider;
+#include "include/JoyMacroCore.h"
 
 class OverriderPollThread
 {
