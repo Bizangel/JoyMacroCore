@@ -55,7 +55,8 @@ bool VigemClient::CreateAndPlugController(int physicalControllerIndex)
 
 bool VigemClient::DeleteAndUnplugController()
 {
-    if (_controller != nullptr)
+    LOG_DEBUG("DeleteAndUnplugController called!");
+    if (_controller == nullptr) // cannot delete non-existant controller
         return false;
 
     _controller = nullptr; // reset pointer, will trigger destructor
@@ -69,6 +70,8 @@ VigemController* VigemClient::getControllerRef()
 
 VigemClient::~VigemClient()
 {
+    _controller = nullptr; // de-init controller first
+
     LOG_DEBUG("De-initializing VigemClient");
     if (initted) {
         vigem_disconnect(client);

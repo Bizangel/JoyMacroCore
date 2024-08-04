@@ -1,11 +1,9 @@
-#include "OverrideHandler.h"
+#include "Include/JoyMacroCore.h"
+#include <memory.h>
+#include "VigemClient.h"
+#include "OverriderPollThread.h"
 
-std::shared_ptr<OverrideHandler> OverrideHandler::getInstance()
-{
-    return _instance == nullptr ? std::make_shared<OverrideHandler>() : _instance;
-}
-
-int OverrideHandler::EnsureVigemInitialized()
+int JoyMacroOverrideClient::EnsureVigemInitialized()
 {
     if (_vigemClient != nullptr)
         return 0; // already initialized
@@ -14,8 +12,9 @@ int OverrideHandler::EnsureVigemInitialized()
     return _vigemClient->Initialize();
 }
 
-JoyMacroExitCode OverrideHandler::StartOverride(int overrideIndex, IGamepadOverrider* overrider)
+JoyMacroExitCode JoyMacroOverrideClient::StartOverride(int overrideIndex, IGamepadOverrider* overrider)
 {
+    LOG_DEBUG("Start Override Called!");
     if (_poller != nullptr)
         return JoyMacroExitCode::ALREADY_INITIALIZED;
 
@@ -33,14 +32,25 @@ JoyMacroExitCode OverrideHandler::StartOverride(int overrideIndex, IGamepadOverr
     return JoyMacroExitCode::SUCCESS;
 }
 
-JoyMacroExitCode OverrideHandler::StopOverride()
+JoyMacroExitCode JoyMacroOverrideClient::StopOverride()
 {
+    LOG_DEBUG("StopOverride Called!");
     // Only stops currently connected controller. Vigem subsystem will be cleanup'd by smart pointers.
-    _poller->End();
-    _poller = nullptr; // reset poller and trigger cleanup
-    _vigemClient->DeleteAndUnplugController();
+    if (_poller != nullptr) {
+        LOG_DEBUG("Stopping poller thread from outside...");
+        _poller->End();
+        _poller = nullptr; // reset poller and trigger cleanup
+    }
+    else {
+        LOG_DEBUG("Stopping poller with NULL!");
+    }
+
+    if (_vigemClient != nullptr) {
+        _vigemClient->DeleteAndUnplugController();
+    }
 
     // TODO: stop-hid hide
-
     return JoyMacroExitCode::SUCCESS;
 }
+
+JoyMacroOverrideClient::~JoyMacroOverrideClient() = default;

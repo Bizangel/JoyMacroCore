@@ -28,7 +28,23 @@ public:
 	virtual void OverrideInput(XINPUT_GAMEPAD& gamepadRef) = 0;
 };
 
-// ========================
-// Methods For Overriding
-// =========================
-JoyMacroExitCode InitControllerOverride(int idx, IGamepadOverrider* overrider);
+class VigemClient;
+class OverriderPollThread;
+
+
+#define POLLING_DELAY_MS 10
+class JoyMacroOverrideClient
+{
+private:
+
+
+	std::unique_ptr<VigemClient> _vigemClient = nullptr;
+	std::unique_ptr<OverriderPollThread> _poller = nullptr;
+
+	int EnsureVigemInitialized();
+public:
+	JoyMacroExitCode StartOverride(int overrideIndex, IGamepadOverrider* overrider);
+	JoyMacroExitCode StopOverride();
+
+	~JoyMacroOverrideClient();
+};

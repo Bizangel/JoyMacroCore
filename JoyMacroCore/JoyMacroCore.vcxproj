@@ -125,6 +125,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <LanguageStandard>Default</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -177,15 +178,13 @@ xcopy /Y /E "$(ProjectDir)include\" "$(OutDir)Include"</Command>
   <ItemGroup>
     <ClInclude Include="include\JoyMacroCore.h" />
     <ClInclude Include="JoyMacroLogging.h" />
-    <ClInclude Include="OverrideHandler.h" />
     <ClInclude Include="OverriderPollThread.h" />
     <ClInclude Include="VigemClient.h" />
     <ClInclude Include="VigemController.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="JoyMacroCore.cpp" />
     <ClCompile Include="JoyMacroLogging.cpp" />
-    <ClCompile Include="OverrideHandler.cpp" />
+    <ClCompile Include="JoyMacroOverrideClient.cpp" />
     <ClCompile Include="OverriderPollThread.cpp" />
     <ClCompile Include="VigemClient.cpp" />
     <ClCompile Include="VigemController.cpp" />

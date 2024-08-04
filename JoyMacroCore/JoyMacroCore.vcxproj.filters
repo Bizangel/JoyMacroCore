@@ -27,9 +27,6 @@
     <ClInclude Include="VigemController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OverrideHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OverriderPollThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -38,16 +35,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="JoyMacroCore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="VigemClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VigemController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OverrideHandler.cpp">
+    <ClCompile Include="JoyMacroOverrideClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OverriderPollThread.cpp">
