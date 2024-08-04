@@ -12,6 +12,9 @@ int main()
     std::unique_ptr<ExampleOverrider> overrider = std::make_unique<ExampleOverrider>();
     std::unique_ptr<JoyMacroOverrideClient> overrideClient = std::make_unique<JoyMacroOverrideClient>();
 
+    // set custom polling delay we want
+    overrideClient->setPollingDelayMs(10);
+
     int activeControllerIndex = overrideClient->getFirstActiveControllerIndex();
     if (activeControllerIndex == -1) {
         std::cout << "No connected controllers" << std::endl;

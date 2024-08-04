@@ -13,6 +13,11 @@ int JoyMacroOverrideClient::EnsureVigemInitialized()
     return _vigemClient->Initialize();
 }
 
+void JoyMacroOverrideClient::setPollingDelayMs(int delay)
+{
+    _pollingDelayMs = delay;
+}
+
 JoyMacroExitCode JoyMacroOverrideClient::StartOverride(int overrideIndex, IGamepadOverrider* overrider)
 {
     return StartOverride(overrideIndex, overrider, {});
@@ -36,7 +41,7 @@ JoyMacroExitCode JoyMacroOverrideClient::StartOverride(int overrideIndex, IGamep
 
     // TODO: start HID-HIDE
     _poller = std::make_shared<OverriderPollThread>(
-        POLLING_DELAY_MS, overrider, _vigemClient->getControllerRef(), _keyhookThread->getPaddleStateRef()
+        _pollingDelayMs, overrider, _vigemClient->getControllerRef(), _keyhookThread->getPaddleStateRef()
     );
     _poller->Initialize(); 
 

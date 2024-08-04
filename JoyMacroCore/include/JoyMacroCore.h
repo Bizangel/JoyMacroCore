@@ -41,16 +41,19 @@ class OverriderPollThread;
 class KeyboardHookThread;
 
 
-#define POLLING_DELAY_MS 10
+#define DEFAULT_POLLING_DELAY_MS 10
 class JoyMacroOverrideClient
 {
 private:
 	std::shared_ptr<VigemClient> _vigemClient;
 	std::shared_ptr<OverriderPollThread> _poller;
 	std::shared_ptr<KeyboardHookThread> _keyhookThread;
+	int _pollingDelayMs = DEFAULT_POLLING_DELAY_MS;
 
 	int EnsureVigemInitialized();
 public:
+	void setPollingDelayMs(int delay);
+
 	JoyMacroExitCode StartOverride(int overrideIndex, IGamepadOverrider* overrider);
 	JoyMacroExitCode StartOverride(int overrideIndex, IGamepadOverrider* overrider, const std::vector<int>& paddleKeymapping);
 	JoyMacroExitCode StopOverride();
