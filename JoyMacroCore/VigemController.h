@@ -9,7 +9,7 @@ class VigemController
 private:
 	VigemClient* _parentClient;
 	PVIGEM_TARGET _controlledPad;
-
+	bool _pluggedIn;
 
 	void RegisterVibrationCallback();
 public:
@@ -20,6 +20,11 @@ public:
 	~VigemController();
 
 	void UpdateState(XINPUT_GAMEPAD& state);
+
+	bool PlugIn();
+	bool UnPlug();
+	bool isPluggedIn() const;
+
 	friend class VigemClient;
 };
 

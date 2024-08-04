@@ -4,6 +4,7 @@ int VigemController::toSendVibration = 0; // 0 by default, will get updated on r
 
 VigemController::VigemController(VigemClient* parent, PVIGEM_TARGET cont, int overrideIndex)
 {
+    _pluggedIn = true;
     _parentClient = parent;
     _controlledPad = cont;
     controllerOverrideIndex = overrideIndex;
@@ -13,13 +14,45 @@ VigemController::VigemController(VigemClient* parent, PVIGEM_TARGET cont, int ov
 VigemController::~VigemController()
 {
     LOG_DEBUG("De-initializing vigem controller");
-    vigem_target_remove(_parentClient->client, _controlledPad);
+    if (_pluggedIn)
+        vigem_target_remove(_parentClient->client, _controlledPad);
+
     vigem_target_free(_controlledPad);
 }
 
 void VigemController::UpdateState(XINPUT_GAMEPAD& state)
 {
     vigem_target_x360_update(_parentClient->client, _controlledPad, *reinterpret_cast<XUSB_REPORT*>(&state));
+}
+
+bool VigemController::PlugIn()
+{
+    LOG_DEBUG("Plugging in virtual controller");
+    if (_pluggedIn) // already plugged in
+        return false; 
+
+    const auto pir = vigem_target_add(_parentClient->client, _controlledPad);
+    if (!VIGEM_SUCCESS(pir))
+        return false;
+
+    _pluggedIn = true; // success
+    return true;
+}
+
+bool VigemController::UnPlug()
+{
+    LOG_DEBUG("UnPlugging virtual controller");
+    if (!_pluggedIn) // already disconnected
+        return false; 
+
+    vigem_target_remove(_parentClient->client, _controlledPad);
+    _pluggedIn = false; 
+    return true;
+}
+
+bool VigemController::isPluggedIn() const
+{
+    return _pluggedIn;
 }
 
 VOID CALLBACK onVibration(
