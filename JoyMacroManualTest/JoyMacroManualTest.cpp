@@ -6,7 +6,6 @@
 
 int main()
 {
-    SampleExporterJoyMacroFunction();
     std::cout << "Hello World!\n";
     system("pause");
 }

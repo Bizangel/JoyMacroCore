@@ -2,10 +2,8 @@
 //
 
 #include "Include/JoyMacroCore.h"
-#include <iostream>
 
-// TODO: This is an example of a library function
-void SampleExporterJoyMacroFunction()
+JoyMacroExitCode InitControllerOverride(int idx, IGamepadOverrider* overrider)
 {
-	std::cout << "Printing" << std::endl;
+	return JoyMacroExitCode::SUCCESS;
 }
