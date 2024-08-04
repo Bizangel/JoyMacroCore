@@ -8,6 +8,11 @@ OverriderPollThread::OverriderPollThread(int polld, IGamepadOverrider* overrider
     pollDelay = polld;
 }
 
+OverriderPollThread::~OverriderPollThread()
+{
+    LOG_DEBUG("OverriderPollThread clean up called");
+}
+
 void OverriderPollThread::Initialize()
 {
     LOG_DEBUG("Initializing polling thread!");

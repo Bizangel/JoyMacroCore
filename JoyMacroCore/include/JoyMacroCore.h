@@ -30,6 +30,7 @@ public:
 
 class VigemClient;
 class OverriderPollThread;
+class KeyboardHookThread;
 
 
 #define POLLING_DELAY_MS 10
@@ -38,6 +39,7 @@ class JoyMacroOverrideClient
 private:
 	std::shared_ptr<VigemClient> _vigemClient;
 	std::shared_ptr<OverriderPollThread> _poller;
+	std::shared_ptr<KeyboardHookThread> _keyhookThread;
 
 	int EnsureVigemInitialized();
 public:

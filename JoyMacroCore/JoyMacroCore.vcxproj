@@ -178,6 +178,7 @@ xcopy /Y /E "$(ProjectDir)include\" "$(OutDir)Include"</Command>
   <ItemGroup>
     <ClInclude Include="include\JoyMacroCore.h" />
     <ClInclude Include="JoyMacroLogging.h" />
+    <ClInclude Include="KeyboardHookThread.h" />
     <ClInclude Include="OverriderPollThread.h" />
     <ClInclude Include="VigemClient.h" />
     <ClInclude Include="VigemController.h" />
@@ -185,6 +186,7 @@ xcopy /Y /E "$(ProjectDir)include\" "$(OutDir)Include"</Command>
   <ItemGroup>
     <ClCompile Include="JoyMacroLogging.cpp" />
     <ClCompile Include="JoyMacroOverrideClient.cpp" />
+    <ClCompile Include="KeyboardHookThread.cpp" />
     <ClCompile Include="OverriderPollThread.cpp" />
     <ClCompile Include="VigemClient.cpp" />
     <ClCompile Include="VigemController.cpp" />

@@ -5,6 +5,8 @@
 #include "JoyMacroCore.h"
 #include "ExampleOverrider.h"
 
+#include <Windows.h>
+
 int main()
 {
     std::unique_ptr<ExampleOverrider> overrider = std::make_unique<ExampleOverrider>();

@@ -2,6 +2,7 @@
 #include <memory.h>
 #include "VigemClient.h"
 #include "OverriderPollThread.h"
+#include "KeyboardHookThread.h"
 
 int JoyMacroOverrideClient::EnsureVigemInitialized()
 {
@@ -29,6 +30,9 @@ JoyMacroExitCode JoyMacroOverrideClient::StartOverride(int overrideIndex, IGamep
     _poller = std::make_shared<OverriderPollThread>(POLLING_DELAY_MS, overrider, _vigemClient->getControllerRef());
     _poller->Initialize(); 
 
+    _keyhookThread = std::make_shared<KeyboardHookThread>();
+    _keyhookThread->InitHooking();
+
     return JoyMacroExitCode::SUCCESS;
 }
 
@@ -39,6 +43,11 @@ JoyMacroExitCode JoyMacroOverrideClient::StopOverride()
     if (_poller != nullptr) {
         _poller->End();
         _poller = nullptr; // reset poller and trigger cleanup
+    }
+
+    if (_keyhookThread != nullptr) {
+        _keyhookThread->StopHooking();
+        _keyhookThread = nullptr; // reset thread and trigger cleanup
     }
 
     if (_vigemClient != nullptr) {

@@ -21,6 +21,7 @@ private:
     void PollLoop();
 public:
     OverriderPollThread(int polld, IGamepadOverrider* overrider, VigemController* outputCont);
+    ~OverriderPollThread();
 
     void Initialize();
     void End();
