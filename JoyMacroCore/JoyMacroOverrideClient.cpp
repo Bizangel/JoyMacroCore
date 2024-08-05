@@ -3,6 +3,7 @@
 #include "VigemClient.h"
 #include "OverriderPollThread.h"
 #include "KeyboardHookThread.h"
+#include "RegistryUtils.h"
 
 int JoyMacroOverrideClient::EnsureVigemInitialized()
 {

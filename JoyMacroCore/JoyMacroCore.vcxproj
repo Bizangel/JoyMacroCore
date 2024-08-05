@@ -124,7 +124,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -180,16 +180,20 @@ xcopy /Y /E "$(ProjectDir)include\" "$(OutDir)Include"</Command>
     <ClInclude Include="JoyMacroLogging.h" />
     <ClInclude Include="KeyboardHookThread.h" />
     <ClInclude Include="OverriderPollThread.h" />
+    <ClInclude Include="RegistryUtils.h" />
     <ClInclude Include="VigemClient.h" />
     <ClInclude Include="VigemController.h" />
+    <ClInclude Include="WStringUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JoyMacroLogging.cpp" />
     <ClCompile Include="JoyMacroOverrideClient.cpp" />
     <ClCompile Include="KeyboardHookThread.cpp" />
     <ClCompile Include="OverriderPollThread.cpp" />
+    <ClCompile Include="RegistryUtils.cpp" />
     <ClCompile Include="VigemClient.cpp" />
     <ClCompile Include="VigemController.cpp" />
+    <ClCompile Include="WStringUtils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

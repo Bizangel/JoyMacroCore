@@ -36,6 +36,12 @@
     <ClInclude Include="KeyboardHookThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WStringUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RegistryUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VigemClient.cpp">
@@ -54,6 +60,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KeyboardHookThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WStringUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RegistryUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

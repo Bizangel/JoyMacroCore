@@ -5,7 +5,6 @@
 #include "JoyMacroCore.h"
 #include "ExampleOverrider.h"
 #include <vector>
-#include <Windows.h>
 
 int main()
 {
