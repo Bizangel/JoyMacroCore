@@ -23,7 +23,9 @@ int main()
     // basic paddle keymapping
     std::vector<int> keymapping{ 'Q','W','E','R' };
 
-    overrideClient->StartOverride(activeControllerIndex, overrider.get(), keymapping);
+    if (overrideClient->StartOverride(activeControllerIndex, overrider.get(), keymapping) != JoyMacroExitCode::SUCCESS)
+        return -1;
+
     std::cout << "Press To Stop" << std::endl;
     system("pause");
 

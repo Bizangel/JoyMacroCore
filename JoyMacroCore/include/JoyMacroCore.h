@@ -18,6 +18,7 @@ enum JoyMacroExitCode {
 	VIGEM_UNABLE_INITIALIZE = 1,
 	VIGEM_UNABLE_PLUG_CONTROLLER = 2,
 	ALREADY_INITIALIZED = 3,
+	HID_HIDE_MISSING = 4,
 };
 
 struct PaddleState {
@@ -39,6 +40,7 @@ public:
 class VigemClient;
 class OverriderPollThread;
 class KeyboardHookThread;
+class HidHideClient;
 
 
 #define DEFAULT_POLLING_DELAY_MS 10
@@ -48,6 +50,8 @@ private:
 	std::shared_ptr<VigemClient> _vigemClient;
 	std::shared_ptr<OverriderPollThread> _poller;
 	std::shared_ptr<KeyboardHookThread> _keyhookThread;
+	std::shared_ptr<HidHideClient> _hidHideClient;
+	
 	int _pollingDelayMs = DEFAULT_POLLING_DELAY_MS;
 
 	int EnsureVigemInitialized();
@@ -60,5 +64,6 @@ public:
 
 	int getFirstActiveControllerIndex();
 
+	JoyMacroOverrideClient();
 	~JoyMacroOverrideClient();
 };

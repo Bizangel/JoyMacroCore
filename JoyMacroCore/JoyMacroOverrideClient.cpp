@@ -4,6 +4,7 @@
 #include "OverriderPollThread.h"
 #include "KeyboardHookThread.h"
 #include "RegistryUtils.h"
+#include "HidHideClient.h"
 
 int JoyMacroOverrideClient::EnsureVigemInitialized()
 {
@@ -31,22 +32,27 @@ JoyMacroExitCode JoyMacroOverrideClient::StartOverride(int overrideIndex, IGamep
         return JoyMacroExitCode::ALREADY_INITIALIZED;
 
     // Ensure initialized, if unable to initialize then stop execution. Nothing we can do about that.
-    if (!EnsureVigemInitialized())
+    if (!EnsureVigemInitialized()) 
         return JoyMacroExitCode::VIGEM_UNABLE_INITIALIZE;
 
-    if (!_vigemClient->CreateAndPlugController(overrideIndex))
+    if (!_hidHideClient->InitAndEnsureHidHideInstalled())
+        return JoyMacroExitCode::HID_HIDE_MISSING;
+
+    // Enable HidHide (must be done BEFORE virtual controller is initialized)
+    _hidHideClient->EnableGamepadHiding();
+
+    if (!_vigemClient->CreateAndPlugController(overrideIndex)) {
+        _hidHideClient->DisableGamepadHiding();
         return JoyMacroExitCode::VIGEM_UNABLE_PLUG_CONTROLLER;
+    }
     
     _keyhookThread = std::make_shared<KeyboardHookThread>(paddleKeymapping);
     _keyhookThread->InitHooking();
 
-    // TODO: start HID-HIDE
     _poller = std::make_shared<OverriderPollThread>(
         _pollingDelayMs, overrider, _vigemClient->getControllerRef(), _keyhookThread->getPaddleStateRef()
     );
     _poller->Initialize(); 
-
-
 
     return JoyMacroExitCode::SUCCESS;
 }
@@ -69,7 +75,8 @@ JoyMacroExitCode JoyMacroOverrideClient::StopOverride()
         _vigemClient->DeleteAndUnplugController();
     }
 
-    // TODO: stop-hid hide
+    _hidHideClient->DisableGamepadHiding();
+
     return JoyMacroExitCode::SUCCESS;
 }
 
@@ -88,5 +95,10 @@ int JoyMacroOverrideClient::getFirstActiveControllerIndex()
     return -1;
 }
 
+
+JoyMacroOverrideClient::JoyMacroOverrideClient()
+{
+    _hidHideClient = std::make_shared<HidHideClient>();
+}
 
 JoyMacroOverrideClient::~JoyMacroOverrideClient() = default;

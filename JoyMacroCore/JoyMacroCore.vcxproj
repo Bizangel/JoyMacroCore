@@ -176,8 +176,10 @@ xcopy /Y /E "$(ProjectDir)include\" "$(OutDir)Include"</Command>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="HidHideClient.h" />
     <ClInclude Include="include\JoyMacroCore.h" />
     <ClInclude Include="JoyMacroLogging.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="KeyboardHookThread.h" />
     <ClInclude Include="OverriderPollThread.h" />
     <ClInclude Include="RegistryUtils.h" />
@@ -186,6 +188,7 @@ xcopy /Y /E "$(ProjectDir)include\" "$(OutDir)Include"</Command>
     <ClInclude Include="WStringUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HidHideClient.cpp" />
     <ClCompile Include="JoyMacroLogging.cpp" />
     <ClCompile Include="JoyMacroOverrideClient.cpp" />
     <ClCompile Include="KeyboardHookThread.cpp" />
