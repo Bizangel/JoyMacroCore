@@ -20,6 +20,11 @@ void JoyMacroOverrideClient::setPollingDelayMs(int delay)
     _pollingDelayMs = delay;
 }
 
+void JoyMacroOverrideClient::disableHidHide()
+{
+    _useHidHide = false;
+}
+
 JoyMacroExitCode JoyMacroOverrideClient::StartOverride(int overrideIndex, IGamepadOverrider* overrider)
 {
     return StartOverride(overrideIndex, overrider, {});
@@ -35,11 +40,13 @@ JoyMacroExitCode JoyMacroOverrideClient::StartOverride(int overrideIndex, IGamep
     if (!EnsureVigemInitialized()) 
         return JoyMacroExitCode::VIGEM_UNABLE_INITIALIZE;
 
-    if (!_hidHideClient->InitAndEnsureHidHideInstalled())
-        return JoyMacroExitCode::HID_HIDE_MISSING;
+    if (_useHidHide) {
+        if (!_hidHideClient->InitAndEnsureHidHideInstalled())
+            return JoyMacroExitCode::HID_HIDE_MISSING;
 
-    // Enable HidHide (must be done BEFORE virtual controller is initialized)
-    _hidHideClient->EnableGamepadHiding();
+        // Enable HidHide (must be done BEFORE virtual controller is initialized)
+        _hidHideClient->EnableGamepadHiding();
+    }
 
     if (!_vigemClient->CreateAndPlugController(overrideIndex)) {
         _hidHideClient->DisableGamepadHiding();
@@ -75,7 +82,8 @@ JoyMacroExitCode JoyMacroOverrideClient::StopOverride()
         _vigemClient->DeleteAndUnplugController();
     }
 
-    _hidHideClient->DisableGamepadHiding();
+    if (_useHidHide)
+        _hidHideClient->DisableGamepadHiding();
 
     return JoyMacroExitCode::SUCCESS;
 }

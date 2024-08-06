@@ -51,12 +51,14 @@ private:
 	std::shared_ptr<OverriderPollThread> _poller;
 	std::shared_ptr<KeyboardHookThread> _keyhookThread;
 	std::shared_ptr<HidHideClient> _hidHideClient;
+	bool _useHidHide = true;
 	
 	int _pollingDelayMs = DEFAULT_POLLING_DELAY_MS;
 
 	int EnsureVigemInitialized();
 public:
 	void setPollingDelayMs(int delay);
+	void disableHidHide();
 
 	JoyMacroExitCode StartOverride(int overrideIndex, IGamepadOverrider* overrider);
 	JoyMacroExitCode StartOverride(int overrideIndex, IGamepadOverrider* overrider, const std::vector<int>& paddleKeymapping);
