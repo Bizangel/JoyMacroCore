@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include "WStringUtils.h"
 
 #define LOG_DEBUG PrintScreenLogDebug
 #define LOG_WARN PrintScreenLogWarn
