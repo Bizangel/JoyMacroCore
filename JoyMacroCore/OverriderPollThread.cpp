@@ -41,9 +41,9 @@ PaddleState OverriderPollThread::getCurrentPaddleState() {
     // Ensure the vector has at least 4 elements
     if (_paddleStateRef->size() >= 4) {
         state.P1 = (*_paddleStateRef)[0];
-        state.P2 = (*_paddleStateRef)[0];
-        state.P3 = (*_paddleStateRef)[0];
-        state.P4 = (*_paddleStateRef)[0];
+        state.P2 = (*_paddleStateRef)[1];
+        state.P3 = (*_paddleStateRef)[2];
+        state.P4 = (*_paddleStateRef)[3];
     }
     else {
         LOG_ERROR("INVALID STATE FOUND: PADDLE STATE VECTOR WITH LESS THAN 4 ELEMENTS");
