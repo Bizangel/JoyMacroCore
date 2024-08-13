@@ -6,6 +6,16 @@ void PrintScreenLogDebug(std::string message) {
 #endif
 }
 
+void PrintScreenLogInfo(std::string message) {
+#if defined(_DEBUG)
+	std::cout << "[INFO] " + message << std::endl;
+#endif
+
+#if !defined(_DEBUG)
+	MessageBox(NULL, WStringUtils::ConvertUtf8ToWide(message).c_str(), L"JoyMacroCore INFO", MB_OK | MB_ICONINFORMATION);
+#endif
+
+}
 void PrintScreenLogWarn(std::string message) {
 #if defined(_DEBUG)
 	std::cout << "[WARN] " + message << std::endl;
