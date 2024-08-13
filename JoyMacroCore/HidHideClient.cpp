@@ -100,7 +100,7 @@ int CreateProcessWithPipes(const std::string& command, std::string& stdOut, std:
         NULL,           // Process handle not inheritable
         NULL,           // Thread handle not inheritable
         TRUE,           // Set handle inheritance to TRUE
-        0,              // No creation flags
+        CREATE_NO_WINDOW,              // No creation flags
         NULL,           // Use parent's environment block
         NULL,           // Use parent's starting directory 
         &siStartInfo,   // Pointer to STARTUPINFO structure
