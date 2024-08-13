@@ -43,26 +43,125 @@ bool HidHideClient::InitAndEnsureHidHideInstalled()
     return true; 
 }
 
-int HidHideClient::Popen(const std::string& command, std::string& stdOut) {
-    std::array<char, 128> buffer;
-    std::string result;
-    std::string fullCommand = "cmd /c ^\"" + command + "\"";
+// Not too familiar with winapi, this is mostly ChatGPT tbh
+int CreateProcessWithPipes(const std::string& command, std::string& stdOut, std::string& stdErr)
+{
+    HANDLE hStdOutRead, hStdOutWrite;
+    HANDLE hStdErrRead, hStdErrWrite;
+    HANDLE hStdInRead, hStdInWrite; 
+    SECURITY_ATTRIBUTES saAttr;
+    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+    saAttr.bInheritHandle = TRUE;
+    saAttr.lpSecurityDescriptor = NULL;
 
-    LOG_DEBUG("Executing command: " + fullCommand);
+    // Create a pipe for the child process's STDOUT.
+    int stdOutPipeCreateResult = CreatePipe(&hStdOutRead, &hStdOutWrite, &saAttr, 0);
+    int stdErrPipeCreateResult = CreatePipe(&hStdErrRead, &hStdErrWrite, &saAttr, 0);
+    int stdInPipeCreateResult = CreatePipe(&hStdInRead, &hStdInWrite, &saAttr, 0);
+    bool errorCreatingPipe = (stdOutPipeCreateResult == 0) || (stdErrPipeCreateResult == 0) || (stdInPipeCreateResult == 0);
+    
+    if (errorCreatingPipe) {
+        if (!stdOutPipeCreateResult)
+            CloseHandle(hStdOutWrite);
 
-    FILE* pipe = _popen(fullCommand.c_str(), "r");
-    if (!pipe)
+        if (!stdErrPipeCreateResult)
+            CloseHandle(hStdErrWrite);
+
+        if (!stdInPipeCreateResult)
+            CloseHandle(hStdInWrite);
+
+        stdErr = "Unable to create pipes for child process";
+        return -1;
+    }
+
+    // Ensure the pipe handles are not inheritted
+    SetHandleInformation(hStdOutRead, HANDLE_FLAG_INHERIT, 0);
+    SetHandleInformation(hStdErrRead, HANDLE_FLAG_INHERIT, 0);
+    SetHandleInformation(hStdInWrite, HANDLE_FLAG_INHERIT, 0);
+
+    // Create the child process.
+    PROCESS_INFORMATION piProcInfo;
+    STARTUPINFO siStartInfo;
+
+    ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
+    ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
+    siStartInfo.cb = sizeof(STARTUPINFO);
+    siStartInfo.hStdError = hStdErrWrite;
+    siStartInfo.hStdOutput = hStdOutWrite;
+    siStartInfo.hStdInput = hStdInRead;
+    siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
+
+    std::wstring cmd = WStringUtils::ConvertUtf8ToWide(command);
+    
+    // Create the child process.
+    BOOL bSuccess = CreateProcess(
+        NULL,           // No module name (use command line)
+        &cmd[0],     // Command line
+        NULL,           // Process handle not inheritable
+        NULL,           // Thread handle not inheritable
+        TRUE,           // Set handle inheritance to TRUE
+        0,              // No creation flags
+        NULL,           // Use parent's environment block
+        NULL,           // Use parent's starting directory 
+        &siStartInfo,   // Pointer to STARTUPINFO structure
+        &piProcInfo);   // Pointer to PROCESS_INFORMATION structure
+
+    // If an error occurs, exit the application.
+    if (!bSuccess)
     {
-        LOG_ERROR("Couldn't start command: " + fullCommand);
-        return 0;
+        CloseHandle(hStdOutWrite);
+        CloseHandle(hStdErrWrite);
+        CloseHandle(hStdInWrite);
+        return -1;
     }
-    while (fgets(buffer.data(), 128, pipe) != NULL) {
-        result += buffer.data();
-    }
-    auto returnCode = _pclose(pipe);
-    stdOut = result;
+    else
+    {
+        // Close the write end of the pipes now that it is no longer needed.
+        CloseHandle(hStdOutWrite);
+        CloseHandle(hStdErrWrite);
+        CloseHandle(hStdInWrite);
 
-    return returnCode;
+        // Read output from the child process's pipe for STDOUT and STDERR.
+        DWORD dwRead;
+        CHAR chBuf[4096];
+        std::string result;
+
+        // Read from stdout
+        while (ReadFile(hStdOutRead, chBuf, sizeof(chBuf), &dwRead, NULL) && dwRead > 0)
+        {
+            stdOut.append(chBuf, dwRead);
+        }
+
+        // Read from stderr
+        while (ReadFile(hStdErrRead, chBuf, sizeof(chBuf), &dwRead, NULL) && dwRead > 0)
+        {
+            stdErr.append(chBuf, dwRead);
+        }
+
+        // Wait for the child process to exit.
+        WaitForSingleObject(piProcInfo.hProcess, INFINITE);
+
+        // Get the exit code.
+        DWORD exitCode;
+        GetExitCodeProcess(piProcInfo.hProcess, &exitCode);
+
+        // Close handles.
+        CloseHandle(piProcInfo.hProcess);
+        CloseHandle(piProcInfo.hThread);
+
+        return exitCode;
+    }
+}
+
+int HidHideClient::Popen(const std::string& command, std::string& stdOut)
+{
+    std::string stdErrInt;
+    std::string stdOutInt;
+    std::string fullCommand = command;
+    LOG_DEBUG("Executing Command: " + fullCommand);
+    int code = CreateProcessWithPipes(fullCommand, stdOutInt, stdErrInt);
+    stdOut = stdOutInt + stdErrInt;
+    return code;
 }
 
 bool HidHideClient::EnableGamepadHiding()
