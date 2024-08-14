@@ -35,6 +35,7 @@ bool VigemController::PlugIn()
     if (!VIGEM_SUCCESS(pir))
         return false;
 
+    RegisterVibrationCallback();
     _pluggedIn = true; // success
     return true;
 }
@@ -45,6 +46,7 @@ bool VigemController::UnPlug()
     if (!_pluggedIn) // already disconnected
         return false; 
 
+    vigem_target_x360_unregister_notification(_controlledPad);
     vigem_target_remove(_parentClient->client, _controlledPad);
     _pluggedIn = false; 
     return true;
